@@ -6,7 +6,7 @@ import os,requests
 
 found = set()
 pooll = set()
-
+sys.exit()
 for n in range(10):
     spns = False
     try :
@@ -35,7 +35,7 @@ def fill_pooll(no):
         pass
     for x in range(no):
         line = bcdechex(vase)
-        #pooll.add(line)
+        pooll.add(line)
         vase += 1
         
 def checkin(c):
