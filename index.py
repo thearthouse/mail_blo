@@ -6,7 +6,7 @@ import os,requests
 
 found = set()
 pooll = set()
-sys.exit()
+#sys.exit()
 for n in range(10):
     spns = False
     try :
