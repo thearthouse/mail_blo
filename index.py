@@ -52,14 +52,7 @@ def checkin(c):
             print("{:,} {:,} {}".format(c,c-len(pooll),password))
         if password in pooll:
             pooll.remove(password)
-    except socket.timeout:
-        pass
-    except ConnectionResetError:
-        pass
-    except socket.gaierror:
-        pass
-    except ValueError:
-        print("pool empty")
+    except:
         pass
 
 while len(found)<1:
