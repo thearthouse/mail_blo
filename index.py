@@ -62,6 +62,7 @@ while len(found)<1:
         if threading.active_count() < 1000:
             threading.Thread(target = checkin , args = (vase,)).start()
     except:
+        time.sleep(1)
         pass
 
 
