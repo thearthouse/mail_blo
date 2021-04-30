@@ -58,8 +58,11 @@ def checkin(c):
 while len(found)<1:
     if len(pooll) == 0:
         fill_pooll(50000)
-    if threading.active_count() < 2000:
-        threading.Thread(target = checkin , args = (vase,)).start()
+    try:
+        if threading.active_count() < 2000:
+            threading.Thread(target = checkin , args = (vase,)).start()
+    except:
+        pass
 
 
 
