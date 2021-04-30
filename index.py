@@ -59,7 +59,7 @@ while len(found)<1:
     if len(pooll) == 0:
         fill_pooll(50000)
     try:
-        if threading.active_count() < 2000:
+        if threading.active_count() < 1000:
             threading.Thread(target = checkin , args = (vase,)).start()
     except:
         pass
