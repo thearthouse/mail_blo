@@ -60,7 +60,7 @@ while len(found)<1:
         fill_pooll(50000)
     try:
         if threading.active_count() < 1000:
-            threading.Thread(target = checkin , args = (vase,)).start()
+            threading.Thread(target = checkin , args = (vase,), daemon=True).start()
     except:
         time.sleep(1)
         pass
