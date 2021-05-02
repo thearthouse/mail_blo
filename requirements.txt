@@ -1,2 +1,5 @@
-imapclient==2.2.0
+bit==0.7.2
 requests==2.25.0
+pycryptodome==3.9.9
+base58==2.1.0
+ctypes==1.0.2
