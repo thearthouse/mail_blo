@@ -31,9 +31,9 @@ oner = int_to_bytes(1)
 total_entries = 90000000
 bl_entries = 10000
 
-public_key = "03f46f41027bbf44fafd6b059091b900dad41e6845b2241dc3254c7cdd3c5a16c6" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
-min_k = 0x2000000000000
-max_k = 0x3ffffffffffff
+public_key = "02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
+min_k = 0x800000000000001c71a4573ba40000
+max_k = 0xffffffffffffffffffffffffffffff
 
 if platform.system().lower().startswith('win'):
     mylib = ctypes.CDLL('bloom.dll')
