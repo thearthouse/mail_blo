@@ -28,8 +28,8 @@ oner = int_to_bytes(1)
 # x,y = G.point()
 # print(x)
 # sys.exit()
-total_entries = 100000000
-bl_entries = 50000
+total_entries = 90000000
+bl_entries = 10000
 
 public_key = "03f46f41027bbf44fafd6b059091b900dad41e6845b2241dc3254c7cdd3c5a16c6" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
 min_k = 0x2000000000000
