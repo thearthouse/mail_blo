@@ -28,12 +28,12 @@ oner = int_to_bytes(1)
 # x,y = G.point()
 # print(x)
 # sys.exit()
-total_entries = 1000000
+total_entries = 100000000
 bl_entries = 50000
 
-public_key = "033cdd9d6d97cbfe7c26f902faf6a435780fe652e159ec953650ec7b1004082790" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
-min_k = 0x200000000
-max_k = 0x3ffffffff
+public_key = "03f46f41027bbf44fafd6b059091b900dad41e6845b2241dc3254c7cdd3c5a16c6" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
+min_k = 0x2000000000000
+max_k = 0x3ffffffffffff
 
 if platform.system().lower().startswith('win'):
     mylib = ctypes.CDLL('bloom.dll')
