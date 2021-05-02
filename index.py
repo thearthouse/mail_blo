@@ -61,8 +61,10 @@ if __name__ == "__main__":
             fill_pooll(50000)
             if len(threads) > 0:
                 for index, thread in enumerate(threads):
-                    print(index)
-                    thread.join()
+                    try:
+                        thread.join()
+                    except:
+                        pass
                 threads = list()
         try:
             if threading.active_count() < 1000:
