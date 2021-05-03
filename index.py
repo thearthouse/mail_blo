@@ -23,12 +23,20 @@ def pointsub(main,other):
     negative = PublicKey.from_point(x, -y % modulo)
     return main.combine_keys([main,negative])
     
+def rand(a, b, seed_bytes=15):
+    seedn = int.from_bytes(os.urandom(seed_bytes), "big") #os.urandom(seed_bytes)
+    if a > seedn:
+        seedn = seedn + a
+    if seedn > b:
+        seedn = (seedn-b)+a
+    return seedn   
+    
 G = PublicKey.from_point(55066263022277343669578718895168534326250603453777594175500187360389116729240,32670510020758816978083085130507043184471273380659243275938904335757337482424)
 oner = int_to_bytes(1)
 # x,y = G.point()
 # print(x)
 # sys.exit()
-total_entries = 90000000
+total_entries = 100000000
 bl_entries = 10000
 
 public_key = "02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
@@ -48,7 +56,7 @@ bloom_check_add.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int, ctypes.
 
         
 
-bloom_prob = 0.000000001                # False Positive = 1 out of 1 billion
+bloom_prob = 0.00000001                # False Positive = 1 out of 1 billion
 bloom_bpe = -(math.log(bloom_prob) / 0.4804530139182014)
 
 bloom_bits = int(total_entries * bloom_bpe)  # ln(2)**2
@@ -79,7 +87,8 @@ zebra = 0
 found = False
 wait = 10
 while True:
-    key = random.SystemRandom().randint(min_k, max_k)
+    #key = random.SystemRandom().randint(min_k, max_k)
+    key = rand(min_k, max_k)
     Point = G.multiply(int_to_bytes(key))
     x,y = Point.point()
     pubct = "{:064x}".format(x)
