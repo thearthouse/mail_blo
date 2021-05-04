@@ -37,7 +37,7 @@ oner = int_to_bytes(1)
 # x,y = G.point()
 # print(x)
 # sys.exit()
-total_entries = 100000000
+total_entries = 1000000
 bl_entries = 10000
 
 public_key = "02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
@@ -79,7 +79,7 @@ for n in range(1,total_entries+1):
         if bl_entries > n:
             daelta[mod_hash] = n
         if n % 1000000 == 0:
-            print("{:,}".format(n),mod_hash)
+            print("{:,}".format(n))
             
 print("Start")
 m_bb = bl_entries
