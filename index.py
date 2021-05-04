@@ -43,7 +43,8 @@ bl_entries = 10000
 public_key = "02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
 min_k = 0x8000000000000022ca4c44936d4000
 max_k = 0xffffffffffffffffffffffffffffff
-
+z_dif = max_k - min_k
+z_dif = bin(z_dif).count("1")
 if platform.system().lower().startswith('win'):
     mylib = ctypes.CDLL('bloom.dll')
     
