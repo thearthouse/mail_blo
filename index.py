@@ -23,13 +23,14 @@ def pointsub(main,other):
     negative = PublicKey.from_point(x, -y % modulo)
     return main.combine_keys([main,negative])
     
-def rand(a, b, seed_bytes=15):
-    seedn = int.from_bytes(os.urandom(seed_bytes), "big") #os.urandom(seed_bytes)
-    if a > seedn:
-        seedn = seedn + a
-    if seedn > b:
-        seedn = (seedn-b)+a
-    return seedn   
+import secrets
+def rand(a, b, bits):
+    #bits = random.randint(5,seed_bytes)
+    seedn = secrets.randbits(bits)
+    seedn = seedn + a
+    if seedn > b or a > seedn:
+        print("leak")
+    return seedn 
     
 G = PublicKey.from_point(55066263022277343669578718895168534326250603453777594175500187360389116729240,32670510020758816978083085130507043184471273380659243275938904335757337482424)
 oner = int_to_bytes(1)
@@ -40,7 +41,7 @@ total_entries = 100000000
 bl_entries = 10000
 
 public_key = "02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
-min_k = 0x800000000000001c71a4573ba40000
+min_k = 0x8000000000000022ca4c44936d4000
 max_k = 0xffffffffffffffffffffffffffffff
 
 if platform.system().lower().startswith('win'):
@@ -88,7 +89,7 @@ found = False
 wait = 10
 while True:
     #key = random.SystemRandom().randint(min_k, max_k)
-    key = rand(min_k, max_k)
+    key = rand(min_k, max_k,z_dif)
     Point = G.multiply(int_to_bytes(key))
     x,y = Point.point()
     pubct = "{:064x}".format(x)
