@@ -69,7 +69,7 @@ bloom_hashes = math.ceil(0.693147180559945 * bloom_bpe)
 print('bloom bits  :', bloom_bits, '   size [%s MB]'%(bloom_bits//(8*1024*1024)))
 print('bloom hashes:', bloom_hashes)
 bloom_filter = bytes( bytearray(b'\x00') * (bloom_bits//8) )
-
+print("GenPonts")
 daelta = {}
 P = pub2point(public_key)
 for n in range(1,total_entries+1):
@@ -79,18 +79,17 @@ for n in range(1,total_entries+1):
         res = bloom_check_add(bytes.fromhex(mod_hash), 32, 1, bloom_bits, bloom_hashes, bloom_filter)
         if bl_entries > n:
             daelta[mod_hash] = n
-        if n % 1000000 == 0:
-            print("{:,}".format(n))
+        #if n % 1000000000000 == 0:
+            #print("{:,}".format(n))
             
-print("Start")
+print("Searching...")
 m_bb = bl_entries
 bsgs = total_entries//bl_entries
 zebra = 0
 found = False
 wait = 10
 while True:
-    #key = random.SystemRandom().randint(min_k, max_k)
-    key = rand(min_k, max_k,z_dif)
+    key = random.SystemRandom().randint(min_k, max_k)
     Point = G.multiply(int_to_bytes(key))
     x,y = Point.point()
     pubct = "{:064x}".format(x)
@@ -125,6 +124,6 @@ while True:
             wait += 10 
         except:
             pass
-    if zebra % 100000 == 0:
+    if zebra % 100000000 == 0:
         print("{:,}".format(zebra),pubct)
     zebra += 1
