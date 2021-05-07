@@ -95,7 +95,7 @@ while True:
     pubct = "{:064x}".format(x)
     if bloom_check_add(bytes.fromhex(pubct), 32, 0, bloom_bits, bloom_hashes, bloom_filter) > 0:
         idx = daelta.get(pubct)
-        print("catch")
+        #print("catch")
         if idx:
             keyn = key - idx
             privkey = "{:064x}".format(keyn)
