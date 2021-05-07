@@ -69,7 +69,7 @@ bloom_hashes = math.ceil(0.693147180559945 * bloom_bpe)
 print('bloom bits  :', bloom_bits, '   size [%s MB]'%(bloom_bits//(8*1024*1024)))
 print('bloom hashes:', bloom_hashes)
 bloom_filter = bytes( bytearray(b'\x00') * (bloom_bits//8) )
-print("GenPonts")
+print("GenPonts...")
 daelta = {}
 P = pub2point(public_key)
 for n in range(1,total_entries+1):
