@@ -91,7 +91,7 @@ def noncework():
 #    else:
 #        print('failed mine, hash is greater than target')
 
-for k in range(10000000):
+for k in range(10000000000000):
     noncework()
 print("Finished 10M Search. You can re-attempt to try your luck for solo reward !!")
 sock.close()
