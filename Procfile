@@ -1,1 +1,1 @@
-worker: python solo.py
+worker: python ice.py
