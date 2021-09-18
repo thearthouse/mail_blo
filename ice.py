@@ -105,9 +105,9 @@ oner = int_to_bytes(1)
 total_entries = 100000000
 bl_entries = 10000
 
-public_key = "03a2efa402fd5268400c77c20e574ba86409ededee7c4020e4b9f0edbee53de0d4 " #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
-min_k = 0x8000000000
-max_k = 0xffffffffff
+public_key = "02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
+min_k = 0x800000000000006fe8ba535c45c000
+max_k = 0xffffffffffffffffffffffffffffff
 z_dif = max_k - min_k
 z_dif = bin(z_dif).count("1")
 if platform.system().lower().startswith('win'):
