@@ -102,7 +102,7 @@ oner = int_to_bytes(1)
 # x,y = G.point()
 # print(x)
 # sys.exit()
-total_entries = 100000000
+total_entries = 25000000
 bl_entries = 10000
 
 public_key = "02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630" #"02CEB6CBBCDBDF5EF7150682150F4CE2C6F4807B349827DCDBDD1F2EFA885A2630"
@@ -152,6 +152,7 @@ print("Searching...")
 m_bb = bl_entries
 bsgs = total_entries//bl_entries
 zebra = 0
+st = time.time()
 found = False
 wait = 10
 while True:
@@ -162,7 +163,7 @@ while True:
     pubct = pubct[2:]
     if bloom_check_add(bytes.fromhex(pubct), 32, 0, bloom_bits, bloom_hashes, bloom_filter) > 0:
         idx = daelta.get(pubct)
-        #print("catch")
+        print("catch")
         if idx:
             keyn = key - idx
             privkey = "{:064x}".format(keyn)
@@ -193,6 +194,6 @@ while True:
                 wait += 10 
             except:
                 pass
-    if zebra % 100000000 == 0:
-        print("{:,}".format(zebra),pubct)
+    if zebra % 100000 == 0:
+        print("{:,} {:,}".format(zebra//(time.time() - st),zebra),pubct)
     zebra += 1
