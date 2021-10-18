@@ -1,1 +1,1 @@
-worker: python ice.py
+worker: python tron.py
