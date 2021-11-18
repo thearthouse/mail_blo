@@ -162,7 +162,7 @@ bloom_check_add.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int, ctypes.
 
         
 
-bloom_prob = 0.000000001 #0.000001                # False Positive = 1 out of 1 billion
+bloom_prob = 0.000001 #0.000000001 #0.000001                # False Positive = 1 out of 1 billion
 bloom_bpe = -(math.log(bloom_prob) / 0.4804530139182014)
 
 bloom_bits = int(total_entries * bloom_bpe)  # ln(2)**2
