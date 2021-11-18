@@ -239,7 +239,11 @@ while True:
             except:
                 pass
         break
-    if zebra % 100000 == 0:
-        print("{:,}  {:,} Tot: {:,}".format(zebra//(time.time() - st),zebra,last),pubct,hex(key))
-    zebra += 1
     last +=1
+    if zebra % 500000 == 0:
+        print("{:,}  {:,} Tot: {:,}".format(zebra//(time.time() - st),zebra,last),pubct,hex(key))
+	update_query = "Update netlog set cnt = '"+str(last)+"' where id = 1"
+	cursor.execute(update_query)
+	connection.commit()
+    zebra += 1
+    
