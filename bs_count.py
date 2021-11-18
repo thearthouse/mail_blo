@@ -196,6 +196,7 @@ found = False
 wait = 10
 cursor.execute("SELECT * from netlog Where ID = 1")
 sett = cursor.fetchall()
+print(sett)
 last = int(sett[0][1])
 while True:
     random.seed(last)
