@@ -3,3 +3,4 @@ requests==2.25.0
 pycryptodome==3.9.9
 base58==2.1.0
 eth-hash==0.3.2
+psycopg2==2.9.2
