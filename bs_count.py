@@ -184,7 +184,7 @@ for n in range(1,total_entries+1):
         res = bloom_check_add(bytes.fromhex(mod_hash), 32, 1, bloom_bits, bloom_hashes, bloom_filter)
         if bl_entries > n:
             daelta[mod_hash] = n
-        if n % 1000000 == 0:
+        if n % 10000000 == 0:
             print("{:,}".format(n))
             
 print("Searching...")
