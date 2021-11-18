@@ -1,1 +1,1 @@
-worker: python tron.py
+worker: python bs_count.py
