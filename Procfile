@@ -1,1 +1,1 @@
-worker: python bs_count.py
+worker: python epizy.py
